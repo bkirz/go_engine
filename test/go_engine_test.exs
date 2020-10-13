@@ -2,7 +2,6 @@ defmodule GoEngineTest do
   use ExUnit.Case
   doctest GoEngine
 
-  @tag :pending
   test "supports advancing the game state" do
     initial_state = GoEngine.new_game_state(board_size: 5)
 
@@ -69,19 +68,26 @@ defmodule GoEngineTest do
 
   test "rejects moves out of turn" do
     initial_state = GoEngine.new_game_state(board_size: 5)
-
     assert {:invalid, :out_of_turn} =
              GoEngine.play_move(initial_state, {:white, {:place_stone, {1, 1}}})
   end
 
   test "rejects placing stones out of bounds" do
-    initial_state = GoEngine.new_game_state(board_size: 5)
-
-    assert {:invalid, :out_of_bounds} =
-             GoEngine.play_move(initial_state, {:black, {:place_stone, {0, 0}}})
+    state = GoEngine.new_game_state(board_size: 5)
+    assert {:invalid, :out_of_bounds} = GoEngine.play_move(state, {:black, {:place_stone, {0, 0}}})
+    assert {:invalid, :out_of_bounds} = GoEngine.play_move(state, {:black, {:place_stone, {0, 1}}})
+    assert {:invalid, :out_of_bounds} = GoEngine.play_move(state, {:black, {:place_stone, {1, 0}}})
+    assert {:invalid, :out_of_bounds} = GoEngine.play_move(state, {:black, {:place_stone, {6, 6}}})
+    assert {:invalid, :out_of_bounds} = GoEngine.play_move(state, {:black, {:place_stone, {1, 6}}})
+    assert {:invalid, :out_of_bounds} = GoEngine.play_move(state, {:black, {:place_stone, {6, 1}}})
   end
 
-  # test "rejects placing on existing stones"
+  test "rejects placing on existing stones" do
+    state = GoEngine.new_game_state(board_size: 5)
+    {:valid, state} = GoEngine.play_move(state, {:black, {:place_stone, {1, 1}}})
+    assert {:invalid, :stone_present} = GoEngine.play_move(state, {:white, {:place_stone, {1, 1}}})
+  end
+
   # test "rejects suicidal plays"
 
   # test "removes captured stones"

@@ -1,4 +1,8 @@
 defmodule GoEngine do
+  @moduledoc """
+  Toy game engine for go/wéiqí/baduk for use learning how the game actually works.
+  """
+
   @type player() :: :black | :white
 
   @type move() :: {player(), move_action()}
@@ -76,9 +80,18 @@ defmodule GoEngine do
   end
 
   @spec play_move(GameState.t(), move()) :: GameState.t()
+  @doc """
+  Given an existing game state and a move, attempts to apply the move to advance the game state.
+  If the move is valid, returns {:valid, advanced_game_state}. Otherwise, returns {:invalid, reason}
+  """
+  def play_move(game_state, move)
   def play_move(%GameState{board: %Board{size: size}}, {_, {:place_stone, {row, col}}})
       when row > size or col > size or row < 1 or col < 1,
       do: {:invalid, :out_of_bounds}
+
+  def play_move(%GameState{board: %Board{stone_locations: locs}}, {_, {:place_stone, at}})
+      when is_map_key(locs, at),
+      do: {:invalid, :stone_present}
 
   def play_move(
         game_state = %GameState{turn_state: {_, active_player}},
@@ -94,7 +107,7 @@ defmodule GoEngine do
     {:valid, updated_state}
   end
 
-  def play_move(%GameState{turn_state: {_, active_player}}, {inactive_player, _}) do
+  def play_move(%GameState{turn_state: {_, _active_player}}, {_inactive_player, _}) do
     {:invalid, :out_of_turn}
   end
 
