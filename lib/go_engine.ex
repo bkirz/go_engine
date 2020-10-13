@@ -92,6 +92,7 @@ defmodule GoEngine do
   If the move is valid, returns {:valid, advanced_game_state}. Otherwise, returns {:invalid, reason}
   """
   def play_move(game_state, move)
+
   def play_move(%GameState{board: %Board{size: size}}, {_, {:place_stone, {row, col}}})
       when row > size or col > size or row < 1 or col < 1,
       do: {:invalid, :out_of_bounds}
