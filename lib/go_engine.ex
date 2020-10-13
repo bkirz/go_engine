@@ -10,6 +10,12 @@ defmodule GoEngine do
   @type coordinate() :: {pos_integer(), pos_integer()}
 
   defmodule Board do
+    @moduledoc """
+    Models a point-in-time board state via board size and a mapping of stone locations
+    to players. Coordinates are 1-indexed, so the top-left intersection will always be
+    {1, 1} and the bottom-right will always be {size, size}.
+    """
+
     fields = [:size, :stone_locations]
     @enforce_keys fields
     defstruct fields
@@ -39,6 +45,7 @@ defmodule GoEngine do
       |> Enum.join()
     end
 
+    defp empty_board_char_for(board_size, location)
     defp empty_board_char_for(_size, {1, 1}), do: "┌"
     defp empty_board_char_for(size, {1, size}), do: "┐"
     defp empty_board_char_for(size, {size, 1}), do: "└"
