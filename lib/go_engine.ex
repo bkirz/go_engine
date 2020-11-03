@@ -1,6 +1,19 @@
 defmodule GoEngine do
-  @moduledoc """
-  Toy game engine for go/wéiqí/baduk for use learning how the game actually works.
+  @moduledoc ~S"""
+  Toy game engine for go/wéiqí/baduk. Here's an example game:
+
+    iex> state = GoEngine.new_game_state(board_size: 9)
+    %GoEngine.GameState{
+      board: %GoEngine.Board{size: 9, stone_locations: %{}},
+      turn_state: {:active, :black},
+      prisoners_captured: %{black: 0, white: 0}}
+    iex> state = GoEngine.play_move(state, {:black, {:place_stone, {2, 2}}})
+    {:valid,
+     %GoEngine.GameState{
+        board: %GoEngine.Board{size: 9, stone_locations: %{{2, 2} => :black}},
+        turn_state: {:active, :white},
+        prisoners_captured: %{black: 0, white: 0}}}
+
   """
 
   @type player() :: :black | :white
