@@ -45,9 +45,7 @@ defmodule GoEngine do
       Enum.map(1..size, fn row ->
         1..size
         |> Enum.map(fn col ->
-          coord = {row, col}
-
-          case Map.fetch(stone_locations, coord) do
+          case Map.fetch(stone_locations, {row, col}) do
             {:ok, player} -> @stone_chars[player]
             :error -> empty_board_char_for(size, {row, col})
           end
